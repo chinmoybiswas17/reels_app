@@ -1,6 +1,6 @@
 import mongoose, { Connection } from "mongoose";
 
-const MongoDB_URI = process.env.MONGODB_URI!;
+const MongoDB_URI = process.env.MongoDB_URI!;
 
 if (!MongoDB_URI) {
   throw new Error("Please define MONGODB uri in the env file");

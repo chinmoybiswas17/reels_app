@@ -1,10 +1,9 @@
 import bcrypt from "bcryptjs";
-import mongoose, { model, models, Schema } from "mongoose";
+import { Document, model, models, Schema } from "mongoose";
 
-export interface IUser {
+export interface IUser extends Document {
   email: string;
   password: string;
-  _id?: mongoose.Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -17,9 +16,11 @@ const userSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function name(next) {
-  if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 10);
+// Use function expression instead of arrow function for `this` binding
+userSchema.pre("save", async function (next) {
+  const user = this as IUser;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 10);
   }
   next();
 });
